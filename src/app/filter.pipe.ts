@@ -10,8 +10,20 @@ export class FilterPipe implements PipeTransform {
     if (!searchText) return items;
 
     searchText = searchText.toLowerCase();
-    return items.filter(item =>
-      JSON.stringify(item).toLowerCase().includes(searchText)
-    );
+
+    return items.filter(item => {
+      // Check name
+      const nameMatch = item.name?.common?.toLowerCase().includes(searchText);
+
+      // Check currencies
+      const currencies = item.currencies ? Object.keys(item.currencies).join(' ').toLowerCase() : '';
+      const currencyMatch = currencies.includes(searchText);
+
+      // Check languages
+      const languages = item.languages ? Object.values(item.languages).join(' ').toLowerCase() : '';
+      const languageMatch = languages.includes(searchText);
+
+      return nameMatch || currencyMatch || languageMatch;
+    });
   }
 }
